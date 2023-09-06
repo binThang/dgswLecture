@@ -4,22 +4,15 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public enum EnemyState
-    {
-        Idle,
-        Chasing,
-        Attack
-    }
+    EnemyState currentState;
 
-    EnemyState state;
+    public Rigidbody2D rigid;
 
-    Rigidbody2D rigid;
-
-    [SerializeField] GameObject Target;
-    [SerializeField] float movePower;
-    [SerializeField] float maxMoveSpeed;
-    [SerializeField] float findRange;
-    [SerializeField] float attackRange;
+    [SerializeField] public GameObject Target;
+    [SerializeField] public float movePower;
+    [SerializeField] public float maxMoveSpeed;
+    [SerializeField] public float findRange;
+    [SerializeField] public float attackRange;
 
     private void Awake()
     {
@@ -28,7 +21,15 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        state = EnemyState.Idle;
+        ChangeState(new ChasingState(this));
+    }
+
+    public void ChangeState(EnemyState enemyState)
+    {
+        if (currentState != null)
+            currentState.OnExitState();
+        currentState = enemyState;
+        currentState.OnEnterState();
     }
 
     //private void OnEnable()
@@ -51,46 +52,39 @@ public class Enemy : MonoBehaviour
         localScale.x = Mathf.Sign(movePower);
         transform.localScale = localScale;
 
-        switch (state)
-        {
-            case EnemyState.Idle:
-                break;
-            case EnemyState.Chasing:
-                break;
-            case EnemyState.Attack:
-                break;
-        }
+        currentState.UpdateState();
     }
 
     private void FixedUpdate()
     {
-        switch (state)
-        {
-            case EnemyState.Idle:
-                if (Vector2.Distance(Target.transform.position,
-                    transform.position) < findRange)
-                    state = EnemyState.Chasing;
-                break;
-            case EnemyState.Chasing:
-                if (Vector2.Distance(Target.transform.position,
-                    transform.position) < attackRange)
-                {
-                    rigid.velocity = new Vector2(0, 0);
-                    state = EnemyState.Attack;
-                }
+        currentState.PhysicsUpdateState();
+        //switch (state)
+        //{
+        //    case EnemyState.Idle:
+        //        if (Vector2.Distance(Target.transform.position,
+        //            transform.position) < findRange)
+        //            state = EnemyState.Chasing;
+        //        break;
+        //    case EnemyState.Chasing:
+        //        if (Vector2.Distance(Target.transform.position,
+        //            transform.position) < attackRange)
+        //        {
+        //            rigid.velocity = new Vector2(0, 0);
+        //            state = EnemyState.Attack;
+        //        }
 
-                float moveDirection = Target.transform.position.x - transform.position.x;
-                Vector2 moveForce = new Vector2(Mathf.Sign(moveDirection) * movePower, 0);
+        //        float moveDirection = Target.transform.position.x - transform.position.x;
+        //        Vector2 moveForce = new Vector2(Mathf.Sign(moveDirection) * movePower, 0);
 
-                rigid.AddForce(moveForce, ForceMode2D.Impulse);
+        //        rigid.AddForce(moveForce, ForceMode2D.Impulse);
 
-                if (Mathf.Abs(rigid.velocity.x) > maxMoveSpeed)
-                    rigid.velocity = new Vector2(Mathf.Sign(moveDirection)
-                        * maxMoveSpeed, rigid.velocity.y);
-                break;
-            case EnemyState.Attack:
-                Debug.Log("Attack");
-                break;
-        }
+        //        if (Mathf.Abs(rigid.velocity.x) > maxMoveSpeed)
+        //            rigid.velocity = new Vector2(Mathf.Sign(moveDirection)
+        //                * maxMoveSpeed, rigid.velocity.y);
+        //        break;
+        //    case EnemyState.Attack:
+        //        Debug.Log("Attack");
+        //        break;
+        //}
     }
 }
