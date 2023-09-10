@@ -21,7 +21,7 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        ChangeState(new ChasingState(this));
+        ChangeState(new IdleState());
     }
 
     public void ChangeState(EnemyState enemyState)
