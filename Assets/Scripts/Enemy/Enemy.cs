@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     EnemyState currentState;
 
     public Rigidbody2D rigid;
+    [SerializeField] private Animator anim;
 
     [SerializeField] public GameObject Target;
     [SerializeField] public float movePower;
@@ -17,11 +18,12 @@ public class Enemy : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
     }
 
     private void Start()
     {
-        ChangeState(new IdleState());
+        ChangeState(new IdleState(this));
     }
 
     public void ChangeState(EnemyState enemyState)
@@ -48,9 +50,12 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         // (1, 1, 1)
-        Vector3 localScale = Vector3.one;
-        localScale.x = Mathf.Sign(movePower);
-        transform.localScale = localScale;
+        if (rigid.velocity.x != 0)
+        {
+            Vector3 localScale = Vector3.one;
+            localScale.x = Mathf.Sign(rigid.velocity.x);
+            transform.localScale = localScale;
+        }
 
         currentState.UpdateState();
     }
@@ -86,5 +91,26 @@ public class Enemy : MonoBehaviour
         //        Debug.Log("Attack");
         //        break;
         //}
+    }
+
+    [SerializeField] float attackPoint = 1f;
+    [SerializeField] float attackPointRange = 2f;
+
+    public void SetTriggerAnimation(string triggername)
+    {
+        anim.SetTrigger(triggername);
+    }
+
+    public void Attack()
+    {
+        var hit = Physics2D.OverlapCircle(transform.position + new Vector3(transform.localScale.x * attackPoint, 0), attackPointRange);
+        if (hit.gameObject.tag == "Player")
+            Debug.Log("HIT");
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position + new Vector3(transform.localScale.x * attackPoint, 0), attackPointRange);
     }
 }
