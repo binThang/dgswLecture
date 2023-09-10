@@ -76,10 +76,12 @@ public class PlayerController : MonoBehaviour
         else if (h < 0) // left
             sr.flipX = true;
 
+        rigid.AddForce(new Vector2(h * maxMoveSpeed, 0));
+
         if (jumpInput.IsPressed() && !isJumping)
         {
             // Vector2.up = new Vector(0, 1)
-            rigid.AddForce(new Vector2(h, jumpPower), ForceMode2D.Impulse);
+            rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
             isJumping = true;
         }
 
@@ -89,13 +91,8 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!isJumping)
-        {
-            rigid.AddForce(new Vector2(h, 0), ForceMode2D.Impulse);
-
-            if (Mathf.Abs(rigid.velocity.x) > maxMoveSpeed)
-                rigid.velocity = new Vector2(Mathf.Sign(h) * maxMoveSpeed, rigid.velocity.y);
-        }
+        if (Mathf.Abs(rigid.velocity.x) > maxMoveSpeed && h != 0)
+            rigid.velocity = new Vector2(Mathf.Sign(h) * maxMoveSpeed, rigid.velocity.y);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
