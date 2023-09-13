@@ -34,6 +34,12 @@ public class Enemy : MonoBehaviour
         currentState.OnEnterState();
     }
 
+    public void TakeDamage(float damage)
+    {
+        //HP -= damage;
+
+    }
+
     //private void OnEnable()
     //{
     //    StartCoroutine(Die());

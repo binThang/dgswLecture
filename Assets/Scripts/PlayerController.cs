@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
 
+    //[SerializeField] private GameObject bullet;
+    [SerializeField] BulletPool bulletPool;
+
     private float HP;
     [SerializeField] float MaxHP;
 
@@ -26,6 +29,7 @@ public class PlayerController : MonoBehaviour
     PlayerControl playerControlMap;
     InputAction moveInput;
     InputAction jumpInput;
+    InputAction fireInput;
 
     private void Awake()
     {
@@ -42,6 +46,9 @@ public class PlayerController : MonoBehaviour
 
         jumpInput = playerControlMap.Player.Jump;
         jumpInput.started += OnJumpStarted;
+
+        fireInput = playerControlMap.Player.Fire;
+        fireInput.started += OnFireStarted;
 
         HP = MaxHP;
     }
@@ -77,6 +84,7 @@ public class PlayerController : MonoBehaviour
     public void OnMoveStarted(InputAction.CallbackContext context)
     {
         //Debug.Log("Input Started");
+
     }
 
     // 입력이 값이 바뀌었을 때
@@ -94,6 +102,20 @@ public class PlayerController : MonoBehaviour
         //Debug.Log("Input Canceled");
     }
 
+    public void OnFireStarted(InputAction.CallbackContext context)
+    {
+        //GameObject tempBullet = Instantiate(bullet);
+        GameObject tempBullet = bulletPool.getBullet();
+        // fire
+        float direction = Mathf.Sign(rigid.velocity.x);
+        tempBullet.transform.position = transform.position
+            + new Vector3(direction * 2, 0, 0);
+
+        var bulletRigid = tempBullet.GetComponent<Rigidbody2D>();
+        bulletRigid.AddForce(direction * 10 * Vector2.right,
+            ForceMode2D.Impulse);
+    }
+
     public void OnJumpStarted(InputAction.CallbackContext context)
     {
         if (isGrounded || jumpsRemaining > 0)
@@ -109,6 +131,7 @@ public class PlayerController : MonoBehaviour
     {
         moveInput.Enable();
         jumpInput.Enable();
+        fireInput.Enable();
     }
 
     // Update is called once per frame
