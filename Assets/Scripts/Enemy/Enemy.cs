@@ -103,9 +103,12 @@ public class Enemy : MonoBehaviour
 
     public void Attack()
     {
-        var hit = Physics2D.OverlapCircle(transform.position + new Vector3(transform.localScale.x * attackPoint, 0), attackPointRange);
+        Collider2D hit = Physics2D.OverlapCircle(transform.position + new Vector3(transform.localScale.x * attackPoint, 0), attackPointRange);
         if (hit.gameObject.tag == "Player")
-            Debug.Log("HIT");
+        {
+            Vector2 direction = hit.gameObject.transform.position - transform.position;
+            hit.GetComponent<PlayerController>().TakeDamage(10, 5 * direction);
+        }
     }
 
     private void OnDrawGizmos()

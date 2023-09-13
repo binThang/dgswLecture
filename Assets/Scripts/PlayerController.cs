@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundCheck;
 
+    private float HP;
+    [SerializeField] float MaxHP;
+
     private Rigidbody2D rigid;
     private SpriteRenderer sr;
 
@@ -39,6 +42,35 @@ public class PlayerController : MonoBehaviour
 
         jumpInput = playerControlMap.Player.Jump;
         jumpInput.started += OnJumpStarted;
+
+        HP = MaxHP;
+    }
+
+    public void TakeDamage(float damage, Vector2 hitDirection)
+    {
+        HP -= damage;
+        Debug.Log(HP);
+
+        if(HP <= 0)
+        {
+            // 죽음
+            Debug.Log("Die");
+        }
+
+        rigid.AddForce(hitDirection, ForceMode2D.Impulse);
+
+        StartCoroutine(HitEffect());
+    }
+
+    IEnumerator HitEffect()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            sr.color = Color.red;
+            yield return new WaitForSeconds(0.1f);
+            sr.color = Color.white;
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     // 입력이 시작 되었을 때
