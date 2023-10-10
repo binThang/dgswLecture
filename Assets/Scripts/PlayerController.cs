@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour
     //[SerializeField] private GameObject bullet;
     [SerializeField] BulletPool bulletPool;
 
-    private float HP;
+    public float HP;
     [SerializeField] float MaxHP;
 
     private Rigidbody2D rigid;

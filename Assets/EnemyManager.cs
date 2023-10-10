@@ -58,7 +58,15 @@ public class EnemyManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        StartCoroutine(Spawn());
+        //StartCoroutine(Spawn());
+    }
+
+    public GameObject SpawnEnemy(Vector3 position)
+    {
+        GameObject enemy = getEnemy();
+        enemy.transform.position = position;
+
+        return enemy;
     }
 
     private IEnumerator Spawn()
