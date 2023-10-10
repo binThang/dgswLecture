@@ -5,11 +5,13 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     Animator anim;
+    Rigidbody2D rb;
     public BulletPool pool;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     // Start is called before the first frame update
@@ -33,7 +35,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.tag == "Enemy")
         {
             //collision.gameObject.GetComponent<Enemy>().TakeDamage()
-
+            rb.velocity = Vector3.zero;
             Debug.Log("On Collision");
         }
     }

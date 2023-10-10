@@ -107,9 +107,9 @@ public class PlayerController : MonoBehaviour
         //GameObject tempBullet = Instantiate(bullet);
         GameObject tempBullet = bulletPool.getBullet();
         // fire
-        float direction = Mathf.Sign(rigid.velocity.x);
+        float direction = Mathf.Sign(transform.localScale.x);
         tempBullet.transform.position = transform.position
-            + new Vector3(direction * 2, 0, 0);
+            + new Vector3(direction * 0.5f, 0, 0);
 
         var bulletRigid = tempBullet.GetComponent<Rigidbody2D>();
         bulletRigid.AddForce(direction * 10 * Vector2.right,

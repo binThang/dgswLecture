@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] float TimeLimit = 30f;
 
+    [SerializeField] GameObject gameOverPanel;
+    [SerializeField] GameObject gameClearPanel;
+
     // For UI
     [SerializeField] TMPro.TextMeshProUGUI timerText;
 
@@ -31,7 +34,6 @@ public class GameManager : MonoBehaviour
     IEnumerator GameLogic()
     {
         // 게임 시작
-
         // 플레이어가 초기 위치
 
         // 타이머 시작
@@ -45,7 +47,6 @@ public class GameManager : MonoBehaviour
             var enemy = _enemyManager.SpawnEnemy(randomPosition);
             enemies.Add(enemy);
         }
-
 
         while (true)
         {
@@ -76,14 +77,17 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+        Time.timeScale = 0f;
+
         // 게임 오버 UI 처리
         switch (isCleared)
         {
             case 1:
+                gameClearPanel.SetActive(true);
                 break;
             case 2:
-                break;
             case 3:
+                gameOverPanel.SetActive(true);
                 break;
         }
     }
