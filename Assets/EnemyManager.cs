@@ -10,10 +10,12 @@ public class EnemyManager : MonoBehaviour
         return Instance;
     }
 
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float SpawnTime;
 
     Queue<GameObject> queue = new Queue<GameObject>();
+    public List<GameObject> liveEnemies = new List<GameObject>();
 
     private void Awake()
     {
@@ -39,19 +41,22 @@ public class EnemyManager : MonoBehaviour
         if (success)
         {
             enemy.SetActive(true);
-            return enemy;
         }
         else
         {
             enemy = Instantiate(enemyPrefab, transform);
-            return enemy;
-        }       
+        }
+
+        liveEnemies.Add(enemy);
+        return enemy;
     }
 
+    // 적이 죽었을 때 or 비활성화될 때
     public void returnEnemy(GameObject enemyObject)
     {
         //Destroy(gameObject);
         enemyObject.SetActive(false);
+        liveEnemies.Remove(enemyObject);
         queue.Enqueue(enemyObject);
     }
 
@@ -65,6 +70,7 @@ public class EnemyManager : MonoBehaviour
     {
         GameObject enemy = getEnemy();
         enemy.transform.position = position;
+        enemy.GetComponent<Enemy>().Target = player;
 
         return enemy;
     }
@@ -76,6 +82,8 @@ public class EnemyManager : MonoBehaviour
             yield return new WaitForSeconds(SpawnTime);
 
             GameObject enemy = getEnemy();
+            enemy.GetComponent<Enemy>().Target = player;
+
             if (enemy == null)
                 continue;
 

@@ -10,6 +10,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private Animator anim;
 
     [SerializeField] public GameObject Target;
+    [SerializeField] public float HP;
     [SerializeField] public float movePower;
     [SerializeField] public float maxMoveSpeed;
     [SerializeField] public float findRange;
@@ -36,8 +37,7 @@ public class Enemy : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        //HP -= damage;
-
+        HP -= damage;
     }
 
     //private void OnEnable()
@@ -61,6 +61,11 @@ public class Enemy : MonoBehaviour
             Vector3 localScale = Vector3.one;
             localScale.x = Mathf.Sign(rigid.velocity.x);
             transform.localScale = localScale;
+        }
+
+        if (HP <= 0)
+        {
+            EnemyManager.GetInsance().returnEnemy(gameObject);
         }
 
         currentState.UpdateState();

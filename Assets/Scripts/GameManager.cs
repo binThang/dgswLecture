@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] GameObject[] spawnPoints;
+
     [SerializeField] PlayerController _player;
     [SerializeField] EnemyManager _enemyManager;
 
@@ -16,7 +18,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMPro.TextMeshProUGUI timerText;
 
     float timer;
-    List<GameObject> enemies = new List<GameObject>();
 
     // 1: Clear, 2: Die, 3:Timeover
     int isCleared = 0;
@@ -31,6 +32,16 @@ public class GameManager : MonoBehaviour
         StartCoroutine(GameLogic());
     }
 
+    public void Pause()
+    {
+        Time.timeScale = 0f;
+    }
+
+    public void Resume()
+    {
+        Time.timeScale = 1f;
+    }
+
     IEnumerator GameLogic()
     {
         // 게임 시작
@@ -40,18 +51,17 @@ public class GameManager : MonoBehaviour
         timer = 0f;
 
         // 적이 생성되기 시작
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < spawnPoints.Length; i++)
         {
-            var randomPosition = Random.insideUnitCircle * 20f;
-            randomPosition = new Vector2(randomPosition.x, Mathf.Abs(randomPosition.y));
-            var enemy = _enemyManager.SpawnEnemy(randomPosition);
-            enemies.Add(enemy);
+            //var randomPosition = Random.insideUnitCircle * 20f;
+            //randomPosition = new Vector2(randomPosition.x, Mathf.Abs(randomPosition.y));
+            var enemy = _enemyManager.SpawnEnemy(spawnPoints[i].transform.position);
         }
 
         while (true)
         {
             // 적이 모두 죽으면 클리어
-            if (enemies.Count == 0)
+            if (EnemyManager.GetInsance().liveEnemies.Count == 0)
             {
                 isCleared = 1;
                 break;

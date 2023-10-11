@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.tag == "Enemy")
         {
-            //collision.gameObject.GetComponent<Enemy>().TakeDamage()
+            collision.gameObject.GetComponent<Enemy>().TakeDamage(10);
             rb.velocity = Vector3.zero;
             Debug.Log("On Collision");
         }

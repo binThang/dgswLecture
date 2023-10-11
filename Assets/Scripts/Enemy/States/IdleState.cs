@@ -23,6 +23,9 @@ public class IdleState : EnemyState
 
     public override void UpdateState()
     {
+        if (context.Target == null)
+            return;
+
         if (Vector2.Distance(context.Target.transform.position, context.transform.position) < context.findRange)
             context.ChangeState(new ChasingState(context));
     }
