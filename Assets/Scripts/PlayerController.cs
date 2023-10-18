@@ -52,7 +52,7 @@ public class PlayerController : MonoBehaviour
 
         HP = MaxHP;
 
-        int level = StaticManager.GameData.PlayerData.Level;
+        //int level = StaticManager.GameData.PlayerData.Level;
     }
 
     public void TakeDamage(float damage, Vector2 hitDirection)
