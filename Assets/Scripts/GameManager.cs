@@ -35,16 +35,20 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0f;
+        SoundManager.Instance.PlayBGM(false, 0);
     }
 
     public void Resume()
     {
         Time.timeScale = 1f;
+        SoundManager.Instance.PlayBGM(true, 0);
     }
 
     IEnumerator GameLogic()
     {
         // 게임 시작
+        SoundManager.Instance.PlayBGM(true, 0);
+
         // 플레이어가 초기 위치
 
         // 타이머 시작

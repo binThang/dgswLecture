@@ -116,6 +116,8 @@ public class PlayerController : MonoBehaviour
         var bulletRigid = tempBullet.GetComponent<Rigidbody2D>();
         bulletRigid.AddForce(direction * 10 * Vector2.right,
             ForceMode2D.Impulse);
+
+        SoundManager.Instance.PlaySFX(SoundManager.SFX.Attack);
     }
 
     public void OnJumpStarted(InputAction.CallbackContext context)
