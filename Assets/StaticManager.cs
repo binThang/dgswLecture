@@ -18,6 +18,7 @@ public class StaticManager : MonoBehaviour
         }
 
         _instance = this;
+        DontDestroyOnLoad(gameObject);
 
         StartCoroutine(Save());
     }
